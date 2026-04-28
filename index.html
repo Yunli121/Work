@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>薪資即時計算</title>
+    <title>薪資計算</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #e0f2fe; 
+            --bg-color: #e0f2fe; /* 奶藍色背景 */
             --card-bg: #ffffff;
             --border: #000000;
             --plus-bg: #f0fdf4;
             --minus-bg: #fef2f2;
-            --final-panel-bg: #334155;
+            --final-panel-bg: #ccfbf1; /* 換成清爽的薄荷綠 */
+            --final-text: #134e4a;    /* 深綠色文字，避免刺眼 */
         }
 
         * { 
             box-sizing: border-box; 
-            /* 使用新字型 */
             font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
             -webkit-tap-highlight-color: transparent; 
         }
@@ -38,7 +38,7 @@
             border-bottom: 4px solid var(--border); 
             padding-bottom: 10px; 
             margin-top: 0;
-            letter-spacing: 2px;
+            color: #0369a1; /* 深藍標題 */
         }
 
         section {
@@ -51,12 +51,7 @@
         .plus-section { background-color: var(--plus-bg); }
         .minus-section { background-color: var(--minus-bg); }
 
-        .section-title { 
-            font-weight: 900; 
-            margin-bottom: 12px; 
-            display: block; 
-            font-size: 1.1rem; 
-        }
+        .section-title { font-weight: 900; margin-bottom: 12px; display: block; }
 
         .input-item { margin-bottom: 12px; }
         label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; }
@@ -65,11 +60,11 @@
             width: 100%;
             padding: 12px;
             border: 2px solid var(--border);
-            font-size: 20px; /* 稍微加大數字字體 */
+            font-size: 20px; 
             font-weight: 700;
             outline: none;
             background: white;
-            border-radius: 0; /* 保持硬朗邊角 */
+            border-radius: 0;
         }
 
         input::-webkit-outer-spin-button,
@@ -85,32 +80,32 @@
             font-weight: 700;
         }
 
+        /* 這裡改掉黑色了！ */
         .final-result-box {
             margin-top: 25px;
             padding: 20px;
             background: var(--final-panel-bg);
-            color: #fff;
+            color: var(--final-text);
             text-align: center;
             border: 3px solid var(--border);
             box-shadow: 6px 6px 0px var(--border);
         }
 
-        .final-label { font-size: 1rem; color: #cbd5e1; margin-bottom: 5px; display: block; font-weight: 700; }
+        .final-label { font-size: 1rem; margin-bottom: 5px; display: block; font-weight: 700; }
         .final-amount { 
             font-size: 2.8rem; 
             font-weight: 900; 
-            color: #4ade80; 
-            text-shadow: 2px 2px 0px #000;
+            color: #0d9488; /* 漂亮的深青色 */
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2>薪資即時計算</h2>
+    <h2>薪資詳細計算</h2>
 
     <section class="plus-section">
-        <span class="section-title">➕ 應發項目</span>
+        <span class="section-title">➕</span>
         <div class="input-item">
             <label>本薪</label>
             <input type="number" class="salary-input plus" id="baseSalary" value="0" onfocus="clearZero(this)" oninput="updateAll()">
@@ -130,7 +125,7 @@
     </section>
 
     <section class="minus-section">
-        <span class="section-title">➖ 應扣項目</span>
+        <span class="section-title">➖</span>
         <div class="input-item">
             <label>遲到扣薪</label>
             <input type="number" class="salary-input minus" id="lateDeduction" value="0" onfocus="clearZero(this)" oninput="updateAll()">
@@ -154,7 +149,7 @@
     </section>
 
     <div class="final-result-box">
-        <span class="final-label">實發總額</span>
+        <span class="final-label">實發金額</span>
         <span class="final-amount" id="finalNet">$0</span>
     </div>
 </div>
