@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>薪資詳細計算</title>
+    <title>薪資即時計算</title>
     <style>
         :root {
-            --bg-color: #e0f2fe;
+            --bg-color: #e0f2fe; /* 奶藍色背景 */
             --card-bg: #ffffff;
             --border: #000000;
             --plus-bg: #f0fdf4; /* 加項綠 */
             --minus-bg: #fef2f2; /* 減項紅 */
-            --accent: #fbbf24;
         }
 
         * { box-sizing: border-box; font-family: sans-serif; }
@@ -29,7 +28,7 @@
         h2 { border-bottom: 3px solid var(--border); padding-bottom: 10px; margin-top: 0; }
 
         section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             padding: 15px;
             border: 2px solid var(--border);
             box-shadow: 4px 4px 0px var(--border);
@@ -38,18 +37,23 @@
         .plus-section { background-color: var(--plus-bg); }
         .minus-section { background-color: var(--minus-bg); }
 
-        .section-title { font-weight: 900; margin-bottom: 15px; display: block; font-size: 1.1rem; }
+        .section-title { font-weight: 900; margin-bottom: 12px; display: block; font-size: 1.1rem; }
 
         .input-item { margin-bottom: 12px; }
-        label { display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; }
+        label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
         
         input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid var(--border);
-            font-size: 16px;
+            font-size: 18px;
             outline: none;
+            background: white;
         }
+
+        /* 移除輸入框右側的箭頭 (微調 iPhone 體驗) */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         .summary-box {
             background: #fff;
@@ -61,48 +65,38 @@
             font-weight: bold;
         }
 
-        button {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent);
-            border: 3px solid var(--border);
-            box-shadow: 5px 5px 0px var(--border);
-            font-size: 1.2rem;
-            font-weight: 900;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-
-        button:active { transform: translate(2px, 2px); box-shadow: 3px 3px 0px var(--border); }
-
-        .final-result {
+        .final-result-box {
+            margin-top: 25px;
+            padding: 20px;
             background: #000;
             color: #fff;
-            padding: 20px;
             text-align: center;
+            border: 3px solid var(--border);
+            box-shadow: 6px 6px 0px #666;
         }
 
-        .final-amount { font-size: 2rem; display: block; color: #4ade80; }
+        .final-label { font-size: 1rem; color: #aaa; margin-bottom: 5px; display: block; }
+        .final-amount { font-size: 2.2rem; font-weight: 900; color: #4ade80; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2>薪資明細計算</h2>
+    <h2>薪資計算</h2>
 
     <section class="plus-section">
         <span class="section-title">➕ 應發項目 (加項)</span>
         <div class="input-item">
             <label>本薪</label>
-            <input type="number" class="plus-input" id="baseSalary" value="0">
+            <input type="number" class="salary-input plus" id="baseSalary" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="input-item">
             <label>伙食津貼</label>
-            <input type="number" class="plus-input" id="foodAllowance" value="0">
+            <input type="number" class="salary-input plus" id="foodAllowance" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="input-item">
             <label>節慶/其他獎金</label>
-            <input type="number" class="plus-input" id="bonus" value="0">
+            <input type="number" class="salary-input plus" id="bonus" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="summary-box">
             <span>應發合計：</span>
@@ -114,19 +108,19 @@
         <span class="section-title">➖ 應扣項目 (減項)</span>
         <div class="input-item">
             <label>遲到扣薪</label>
-            <input type="number" class="minus-input" id="lateDeduction" value="0">
+            <input type="number" class="salary-input minus" id="lateDeduction" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="input-item">
             <label>病假/生理假扣薪</label>
-            <input type="number" class="minus-input" id="leaveDeduction" value="0">
+            <input type="number" class="salary-input minus" id="leaveDeduction" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="input-item">
             <label>勞保費</label>
-            <input type="number" class="minus-input" id="laborIns" value="0">
+            <input type="number" class="salary-input minus" id="laborIns" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="input-item">
             <label>健保費</label>
-            <input type="number" class="minus-input" id="healthIns" value="0">
+            <input type="number" class="salary-input minus" id="healthIns" value="0" onfocus="clearZero(this)" oninput="updateAll()">
         </div>
         <div class="summary-box">
             <span>應扣合計：</span>
@@ -134,32 +128,45 @@
         </div>
     </section>
 
-    <button onclick="calculateAll()">開始計算</button>
-
-    <div class="final-result">
-        <span>實發總額</span>
+    <div class="final-result-box">
+        <span class="final-label">實發總額</span>
         <span class="final-amount" id="finalNet">$0</span>
     </div>
 </div>
 
 <script>
-    function calculateAll() {
-        // 計算加項
-        const plusInputs = document.querySelectorAll('.plus-input');
+    // 點擊輸入框時，如果是0就清空，方便輸入
+    function clearZero(input) {
+        if (input.value === "0") {
+            input.value = "";
+        }
+    }
+
+    // 即時更新所有數值
+    function updateAll() {
+        // 處理加項
+        const plusInputs = document.querySelectorAll('.plus');
         let sumPlus = 0;
-        plusInputs.forEach(input => sumPlus += parseFloat(input.value) || 0);
+        plusInputs.forEach(input => {
+            sumPlus += parseFloat(input.value) || 0;
+        });
         document.getElementById('totalPlus').innerText = `$${sumPlus.toLocaleString()}`;
 
-        // 計算減項
-        const minusInputs = document.querySelectorAll('.minus-input');
+        // 處理減項
+        const minusInputs = document.querySelectorAll('.minus');
         let sumMinus = 0;
-        minusInputs.forEach(input => sumMinus += parseFloat(input.value) || 0);
+        minusInputs.forEach(input => {
+            sumMinus += parseFloat(input.value) || 0;
+        });
         document.getElementById('totalMinus').innerText = `$${sumMinus.toLocaleString()}`;
 
-        // 實發金額
+        // 計算實發
         const final = sumPlus - sumMinus;
         document.getElementById('finalNet').innerText = `$${final.toLocaleString()}`;
     }
+    
+    // 初始化一次
+    updateAll();
 </script>
 
 </body>
