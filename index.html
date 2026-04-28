@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>薪資計算器</title>
+    <style>
+        :root {
+            --bg-color: #e0f2fe; /* 奶藍色背景 */
+            --main-color: #ffffff;
+            --accent-color: #fbbf24; /* 亮黃點綴 */
+            --border-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--main-color);
+            border: 3px solid var(--border-color);
+            box-shadow: 8px 8px 0px var(--border-color);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0px var(--border-color);
+            font-size: 16px;
+            outline: none;
+            transition: transform 0.1s;
+        }
+
+        input:focus {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--border-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-color);
+            border: 2px solid var(--border-color);
+            box-shadow: 4px 4px 0px var(--border-color);
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--border-color);
+        }
+
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0fdf4; /* 淡綠色 */
+            border: 2px dashed var(--border-color);
+        }
+
+        .result-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            color: #dc2626; /* 紅色強調 */
+            border-top: 2px solid var(--border-color);
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>薪資計算器</h2>
+    
+    <div class="input-group">
+        <label>時薪 (TWD)</label>
+        <input type="number" id="hourlyRate" placeholder="例如: 200" value="190">
+    </div>
+
+    <div class="input-group">
+        <label>本月總工時</label>
+        <input type="number" id="totalHours" placeholder="例如: 160">
+    </div>
+
+    <div class="input-group">
+        <label>扣除項目 (如勞健保)</label>
+        <input type="number" id="deductions" placeholder="0" value="0">
+    </div>
+
+    <button onclick="calculateSalary()">計算薪資</button>
+
+    <div class="result-area" id="resultArea" style="display: none;">
+        <div class="result-line">
+            <span>原始薪資:</span>
+            <span id="rawSalary">$0</span>
+        </div>
+        <div class="result-line">
+            <span>總扣除額:</span>
+            <span id="displayDeductions">$0</span>
+        </div>
+        <div class="result-line total">
+            <span>實領薪資:</span>
+            <span id="netSalary">$0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateSalary() {
+        const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+        const totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
+        const deductions = parseFloat(document.getElementById('deductions').value) || 0;
+
+        const raw = hourlyRate * totalHours;
+        const net = raw - deductions;
+
+        document.getElementById('rawSalary').innerText = `$${raw.toLocaleString()}`;
+        document.getElementById('displayDeductions').innerText = `-$${deductions.toLocaleString()}`;
+        document.getElementById('netSalary').innerText = `$${net.toLocaleString()}`;
+
+        document.getElementById('resultArea').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
 
