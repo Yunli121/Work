@@ -3,166 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>薪資計算器</title>
+    <title>薪資詳細計算</title>
     <style>
         :root {
-            --bg-color: #e0f2fe; /* 奶藍色背景 */
-            --main-color: #ffffff;
-            --accent-color: #fbbf24; /* 亮黃點綴 */
-            --border-color: #000000;
+            --bg-color: #e0f2fe;
+            --card-bg: #ffffff;
+            --border: #000000;
+            --plus-bg: #f0fdf4; /* 加項綠 */
+            --minus-bg: #fef2f2; /* 減項紅 */
+            --accent: #fbbf24;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { background-color: var(--bg-color); padding: 20px; margin: 0; }
+        
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 3px solid var(--border);
+            box-shadow: 8px 8px 0px var(--border);
             padding: 20px;
         }
 
-        .container {
-            background-color: var(--main-color);
-            border: 3px solid var(--border-color);
-            box-shadow: 8px 8px 0px var(--border-color);
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
+        h2 { border-bottom: 3px solid var(--border); padding-bottom: 10px; margin-top: 0; }
+
+        section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 2px solid var(--border);
+            box-shadow: 4px 4px 0px var(--border);
         }
 
-        h2 {
-            margin-top: 0;
-            border-bottom: 3px solid var(--border-color);
-            padding-bottom: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
+        .plus-section { background-color: var(--plus-bg); }
+        .minus-section { background-color: var(--minus-bg); }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .section-title { font-weight: 900; margin-bottom: 15px; display: block; font-size: 1.1rem; }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
+        .input-item { margin-bottom: 12px; }
+        label { display: block; font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; }
+        
         input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            box-shadow: 4px 4px 0px var(--border-color);
+            padding: 10px;
+            border: 2px solid var(--border);
             font-size: 16px;
             outline: none;
-            transition: transform 0.1s;
         }
 
-        input:focus {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--border-color);
+        .summary-box {
+            background: #fff;
+            border: 2px solid var(--border);
+            padding: 10px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
         }
 
         button {
             width: 100%;
             padding: 15px;
-            background-color: var(--accent-color);
-            border: 2px solid var(--border-color);
-            box-shadow: 4px 4px 0px var(--border-color);
-            font-size: 18px;
+            background: var(--accent);
+            border: 3px solid var(--border);
+            box-shadow: 5px 5px 0px var(--border);
+            font-size: 1.2rem;
             font-weight: 900;
             cursor: pointer;
-            margin-top: 10px;
+            margin: 20px 0;
         }
 
-        button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--border-color);
-        }
+        button:active { transform: translate(2px, 2px); box-shadow: 3px 3px 0px var(--border); }
 
-        .result-area {
-            margin-top: 30px;
+        .final-result {
+            background: #000;
+            color: #fff;
             padding: 20px;
-            background-color: #f0fdf4; /* 淡綠色 */
-            border: 2px dashed var(--border-color);
+            text-align: center;
         }
 
-        .result-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .total {
-            font-size: 1.2rem;
-            color: #dc2626; /* 紅色強調 */
-            border-top: 2px solid var(--border-color);
-            padding-top: 10px;
-        }
+        .final-amount { font-size: 2rem; display: block; color: #4ade80; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>薪資計算器</h2>
-    
-    <div class="input-group">
-        <label>時薪 (TWD)</label>
-        <input type="number" id="hourlyRate" placeholder="例如: 200" value="190">
-    </div>
+<div class="app-container">
+    <h2>薪資明細計算</h2>
 
-    <div class="input-group">
-        <label>本月總工時</label>
-        <input type="number" id="totalHours" placeholder="例如: 160">
-    </div>
-
-    <div class="input-group">
-        <label>扣除項目 (如勞健保)</label>
-        <input type="number" id="deductions" placeholder="0" value="0">
-    </div>
-
-    <button onclick="calculateSalary()">計算薪資</button>
-
-    <div class="result-area" id="resultArea" style="display: none;">
-        <div class="result-line">
-            <span>原始薪資:</span>
-            <span id="rawSalary">$0</span>
+    <section class="plus-section">
+        <span class="section-title">➕ 應發項目 (加項)</span>
+        <div class="input-item">
+            <label>本薪</label>
+            <input type="number" class="plus-input" id="baseSalary" value="0">
         </div>
-        <div class="result-line">
-            <span>總扣除額:</span>
-            <span id="displayDeductions">$0</span>
+        <div class="input-item">
+            <label>伙食津貼</label>
+            <input type="number" class="plus-input" id="foodAllowance" value="0">
         </div>
-        <div class="result-line total">
-            <span>實領薪資:</span>
-            <span id="netSalary">$0</span>
+        <div class="input-item">
+            <label>節慶/其他獎金</label>
+            <input type="number" class="plus-input" id="bonus" value="0">
         </div>
+        <div class="summary-box">
+            <span>應發合計：</span>
+            <span id="totalPlus">$0</span>
+        </div>
+    </section>
+
+    <section class="minus-section">
+        <span class="section-title">➖ 應扣項目 (減項)</span>
+        <div class="input-item">
+            <label>遲到扣薪</label>
+            <input type="number" class="minus-input" id="lateDeduction" value="0">
+        </div>
+        <div class="input-item">
+            <label>病假/生理假扣薪</label>
+            <input type="number" class="minus-input" id="leaveDeduction" value="0">
+        </div>
+        <div class="input-item">
+            <label>勞保費</label>
+            <input type="number" class="minus-input" id="laborIns" value="0">
+        </div>
+        <div class="input-item">
+            <label>健保費</label>
+            <input type="number" class="minus-input" id="healthIns" value="0">
+        </div>
+        <div class="summary-box">
+            <span>應扣合計：</span>
+            <span id="totalMinus">$0</span>
+        </div>
+    </section>
+
+    <button onclick="calculateAll()">開始計算</button>
+
+    <div class="final-result">
+        <span>實發總額</span>
+        <span class="final-amount" id="finalNet">$0</span>
     </div>
 </div>
 
 <script>
-    function calculateSalary() {
-        const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
-        const totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
-        const deductions = parseFloat(document.getElementById('deductions').value) || 0;
+    function calculateAll() {
+        // 計算加項
+        const plusInputs = document.querySelectorAll('.plus-input');
+        let sumPlus = 0;
+        plusInputs.forEach(input => sumPlus += parseFloat(input.value) || 0);
+        document.getElementById('totalPlus').innerText = `$${sumPlus.toLocaleString()}`;
 
-        const raw = hourlyRate * totalHours;
-        const net = raw - deductions;
+        // 計算減項
+        const minusInputs = document.querySelectorAll('.minus-input');
+        let sumMinus = 0;
+        minusInputs.forEach(input => sumMinus += parseFloat(input.value) || 0);
+        document.getElementById('totalMinus').innerText = `$${sumMinus.toLocaleString()}`;
 
-        document.getElementById('rawSalary').innerText = `$${raw.toLocaleString()}`;
-        document.getElementById('displayDeductions').innerText = `-$${deductions.toLocaleString()}`;
-        document.getElementById('netSalary').innerText = `$${net.toLocaleString()}`;
-
-        document.getElementById('resultArea').style.display = 'block';
+        // 實發金額
+        const final = sumPlus - sumMinus;
+        document.getElementById('finalNet').innerText = `$${final.toLocaleString()}`;
     }
 </script>
 
 </body>
 </html>
-
